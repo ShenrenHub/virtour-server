@@ -1,0 +1,67 @@
+<html>
+<body>
+<form id="query-form">
+    <input type="text" name="query" id="query-input">
+    <button type="submit">Submit</button>
+</form>
+<input id="suggest-input" type="text" name="suggest">
+<button onclick="getSuggestion()">get suggestion</button>
+<div id="response"></div>
+<script>
+    getSuggestion = async () => {
+        const suggest_input = document.getElementById('suggest-input').value;
+        console.log(suggest_input);
+        const response = await fetch('http://localhost:8000/suggest', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({query: suggest_input})
+        });
+        console.log(response.status)
+        if (response.ok) {
+            const suggestion = await response.json();
+            console.log(suggestion);
+        } else {
+            console.error('Error:', response.toString());
+        }
+    }
+
+    const form = document.getElementById('query-form');
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const query = document.getElementById('query-input').value;
+        const response = await fetch('http://localhost:8000/ask', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({query: query})
+        });
+        if (response.ok) {
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let done = false;
+            while (!done) {
+                const {value, done: doneFlag} = await reader.read();
+                if (doneFlag) {
+                    done = true;
+                    break;
+                }
+                const chunk = decoder.decode(value);
+                const lines = chunk.split('\n\n');
+                for (const line of lines) {
+                    if (line.startsWith('data:')) {
+                        const data = line.substring(6);
+                        const audio_binary = data.split("$")
+                        document.getElementById('response').innerText += data;
+                    }
+                }
+            }
+        } else {
+            console.error('Error:', response.status);
+        }
+    });
+</script>
+</body>
+</html>

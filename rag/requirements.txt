@@ -1,0 +1,9 @@
+torch==2.5.0
+transformers
+faiss-gpu
+tqdm
+openai
+tenacity
+langchain-community
+numpy==1.26.4
+

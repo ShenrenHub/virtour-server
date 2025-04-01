@@ -1,0 +1,30 @@
+# rag
+torch==2.5.0
+transformers~=4.50.0
+faiss-gpu
+tqdm
+openai~=1.68.2
+tenacity
+langchain-community~=0.3.20
+numpy==1.26.4
+python-dotenv~=1.0.1
+
+# mcp_server
+mcp~=1.5.0
+
+# tts
+edge-tts
+websockets~=15.0.1
+sympy~=1.13.1
+
+# backend
+uvicorn~=0.34.0
+fastapi-cors
+langchain~=0.3.21
+langchain-text-splitters~=0.3.7
+SQLAlchemy~=2.0.39
+fastapi~=0.115.12
+sse-starlette~=2.2.1
+msgpack~=1.1.0
+pydub~=0.25.1
+requests~=2.32.3

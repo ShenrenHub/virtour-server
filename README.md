@@ -30,7 +30,7 @@ QWEN_API_KEY=sk-xxxxx
 OPENAI_API_KEY=sk-xxxxxxx
 
 ## Project Structer
-
+```TEXT
 .
 ├── .venv/
 ├── mcp_server/
@@ -47,5 +47,5 @@ OPENAI_API_KEY=sk-xxxxxxx
 ├── main.py
 ├── README.md
 └── requirements.txt
-
+```
 **.env file is missing, you need create my you own**

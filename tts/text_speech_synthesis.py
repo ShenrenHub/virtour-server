@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # @Author : iflytek
+
+speed = 70  # 语速
+vcn = "x4_mingge"  # 发音人
 import os
 
 import requests
@@ -79,9 +82,9 @@ class XunfeiTTS:
             },
             "parameter": {
                 "dts": {
-                    "vcn": "x4_mingge",  # 请先在控制台开通明哥发音人权限
+                    "vcn": vcn,  # 请先在控制台开通明哥发音人权限
                     "language": "zh",
-                    "speed": 50,
+                    "speed": speed,
                     "volume": 50,
                     "pitch": 50,
                     "rhy": 1,
@@ -198,9 +201,9 @@ def do_query(task_id):
 # 1、用户参数，从.env文件中读取
 load_dotenv()
 HOST = "api-dx.xf-yun.com"
-APP_ID = os.getenv("APP_ID")
-API_KEY = os.getenv("API_KEY")
-API_SECRET = os.getenv("API_SECRET")
+APP_ID = os.getenv("XUNFEI_APP_ID")
+API_KEY = os.getenv("XUNFEI_API_KEY")
+API_SECRET = os.getenv("XUNFEI_API_SECRET")
 if __name__ == "__main__":
 
     # 2、执行创建任务

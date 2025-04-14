@@ -102,12 +102,27 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     context = get_retrieved_context(question, vector_db)
     prompt = prepare_prompt(question, context)
 
+    # 千问
+    # api_key = os.getenv("QWEN_API_KEY")
+    # base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    # client = OpenAI(api_key=api_key, base_url=base_url)
+    # response = client.chat.completions.create(
+    #     model="qwen-plus", messages=prompt, temperature=0, stream=True
+    # )
+
+    # DEEPSEEK
     api_key = os.getenv("DEEPSEEK_API_KEY")
     client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
 
     response = client.chat.completions.create(
         model="deepseek-chat", messages=prompt, temperature=0, stream=True
     )
+
+    # # OPENAI
+    # client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    # response = client.chat.completions.create(
+    #     model="gpt-4o-mini", messages=prompt, temperature=0, stream=True
+    # )
 
     async def event_generator():
         print("开始流式传输")
@@ -131,6 +146,7 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
                         audio_binary = await generate_speech_xunfei(sentence)
                         # print("音频生成完成", audio_binary)
                         yield json.dumps(
-                            {"chunk_id": chunk_id, "text": sentence, "audio": base64.b64encode(audio_binary).decode('utf-8')}) + "\n"
+                            {"chunk_id": chunk_id, "text": sentence,
+                             "audio": base64.b64encode(audio_binary).decode('utf-8')}) + "\n"
 
     return event_generator()

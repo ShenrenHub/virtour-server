@@ -32,27 +32,6 @@ app.add_middleware(
 async def ping():
     return {"ping": "pong"}
 
-
-# @app.post("/ask")
-# async def get_answer_stream(request: Request):
-#     data = await request.json()
-#     query = data.get("query")
-#     if not query:
-#         return {"error": "Query is required"}
-#     return StreamingResponse(get_model_answer(query), media_type="multipart/mixed; boundary=audio-boundary")
-# # 模拟生成器函数，用于分段生成 JSON 数据
-# async def get_model_answer(query: str):
-#     # 假设这是你的模型回答逻辑，这里我们模拟分段输出
-#     chunks = [
-#         {"chunk_id": 1, "text": "This is the first part", "audio": "b'audio1"},
-#         {"chunk_id": 2, "text": "This is the second part", "audio": "b'audio2"},
-#         {"chunk_id": 3, "text": "This is the third part", "audio": "b'audio3"},
-#     ]
-#     for chunk in chunks:
-#         # 将每段数据转为 JSON 字符串并添加换行符
-#         yield json.dumps(chunk) + "\n"
-
-
 @app.post("/ask")
 async def get_answer_stream(request: Request):
     data = await request.json()

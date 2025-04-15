@@ -1,37 +1,32 @@
-from typing import Any
-from mcp.server.fastmcp import FastMCP
-from openai import OpenAI
+import os
+import json
 import asyncio
-
+from openai import OpenAI
+from typing import Any
 from torch.onnx import export
-
-# import json
+from mcp.server.fastmcp import FastMCP
 
 # DeepSeek API 配置
-DEEPSEEK_API_KEY = "sk-b1e56df6c0d84ed3baa1f3933c7535d2"
+DEEPSEEK_API_KEY = "sk-...."
 DEEPSEEK_API_BASE = "https://api.deepseek.com"
 
 # 初始化 OpenAI 客户端
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=DEEPSEEK_API_BASE)
 
 mcp = FastMCP("deepseek-v3-interface-demo")
-
-
 async def get_deepseek_response(query: str) -> str:
     """
     Get response from the DeepSeek API using OpenAI library with tool calling capability.
     """
     try:
-        # 定义工具列表
-        tools = [
-            {"type": "function", "function": {"name": "Never", "description": "Sing 《Never Gonna Give You Up》"}},
-            {"type": "function", "function": {"name": "say_goodbye", "description": "Print a goodbye message"}},
-            {"type": "function", "function": {"name": "say_something", "description": "Print a custom message"}},
-        ]
-
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(current_dir, 'tools.json')
+        # 定义工具列表，JSON格式，可以用文件定义
+        with open(json_path, 'r', encoding='utf-8') as file:
+            tools = json.load(file)
         # API调用
         response = client.chat.completions.create(
-            model="deepseek-chat",
+            model="deepseek-chat",#chat对应V3，reasoner对应R1
             messages=[{"role": "user", "content": query}],
             tools=tools,
             tool_choice="auto",
@@ -45,7 +40,6 @@ async def get_deepseek_response(query: str) -> str:
             tool_call = choice.message.tool_calls[0]
             function_name = tool_call.function.name
             if function_name in globals():
-                # 异步调用对应的工具函数
                 result = await globals()[function_name]({})
                 return f"Tool {function_name} called: {result}"
             return f"Unknown tool: {function_name}"
@@ -55,7 +49,7 @@ async def get_deepseek_response(query: str) -> str:
         return f"Error: An unexpected error occurred - {str(e)}"
 
 
-# 这里我定义了三个简单的示例接口，可以换
+# 接口定义
 @mcp.tool()
 async def Never(query: dict) -> str:
     return "Never Gonna Give U Up!!!"
@@ -71,7 +65,6 @@ async def say_goodbye(query: dict) -> str:
 async def say_something(query: dict) -> str:
     """Print a custom message."""
     return "This is a message from the third interface!"
-
 
 async def MCP_test():
     query = "请唱一下never gonna give you up"
@@ -92,11 +85,9 @@ async def MCP_test():
     response = await get_deepseek_response(query)
     print(response)
 
-
 async def get_suggestion(query: str) -> str:
     response = await get_deepseek_response(query)
     return response
-
 
 if __name__ == "__main__":
     asyncio.run(MCP_test())

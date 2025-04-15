@@ -1,23 +1,17 @@
 import base64
 import json
 import os
-import random
-
-import msgpack
 import torch
-from typing import List, Dict, Any, AsyncGenerator, Generator
-
-from faiss import RandomGenerator
 from openai import OpenAI
+from faiss import RandomGenerator
+from typing import List, Dict, Any, AsyncGenerator, Generator
 from langchain_community.vectorstores import FAISS
 from langchain.embeddings.base import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from transformers import AutoTokenizer, AutoModel
-
 from tts.tts_service import generate_speech_xunfei
 
-
-# 设定 API Key
+# 加载嵌入模型
 class LocalEmbeddings(Embeddings):
     def __init__(self, model_name: str):
         super().__init__()
@@ -87,9 +81,9 @@ async def get_fake_model_answer(query: str) -> AsyncGenerator[str, Any]:
             f.write(audio)
         yield json.dumps({"chunk_id": i + 1, "audio": audio_string, "text": text}) + "\n"
 
-
 def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     print("开始向大模型发送问题")
+    # 知识库文本路径
     knowledge_file = "rag/base.txt"
     question = query
 
@@ -102,7 +96,7 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     context = get_retrieved_context(question, vector_db)
     prompt = prepare_prompt(question, context)
 
-    # 千问
+    # Qwen
     # api_key = os.getenv("QWEN_API_KEY")
     # base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     # client = OpenAI(api_key=api_key, base_url=base_url)
@@ -118,7 +112,7 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
         model="deepseek-chat", messages=prompt, temperature=0, stream=True
     )
 
-    # # OPENAI
+    # OPENAI
     # client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     # response = client.chat.completions.create(
     #     model="gpt-4o-mini", messages=prompt, temperature=0, stream=True

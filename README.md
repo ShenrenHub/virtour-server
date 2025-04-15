@@ -1,4 +1,12 @@
-# VirtualTour-Back
+# VirtualTour-Back 
+
+<p align="center">
+ <img src="https://img.shields.io/github/issues/Apricityx/VirtualTour-Back" />
+ <img src="https://img.shields.io/github/forks/Apricityx/VirtualTour-Back" />
+ <img src="https://img.shields.io/github/stars/Apricityx/VirtualTour-Back" />
+ <img src="https://img.shields.io/github/contributors/Apricityx/VirtualTour-Back" /> 
+</p>
+
 
 这是2025年第十八届中国大学生计算机设计大赛虚拟文旅项目的后端代码库，代码的使用方法请参考本文档。
 

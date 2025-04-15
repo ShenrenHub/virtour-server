@@ -1,15 +1,11 @@
 import os
-
+import asyncio
 import edge_tts
 import requests
 from dotenv import load_dotenv
 from pydub import AudioSegment
 from io import BytesIO
-import asyncio
-
 from tts.text_speech_synthesis import get_mp3_audio_download_link
-
-
 async def generate_speech_xunfei(prompt_text):
     download_link = get_mp3_audio_download_link(prompt_text)
     # 转换为wav并且return二进制文件
@@ -23,8 +19,6 @@ async def generate_speech_xunfei(prompt_text):
         wav_file.write(wav_data.getvalue())
     # todo ===============================
     return wav_data.getvalue()
-
-
 # 基本功能测试：文本生成语音
 async def generate_speech_microsoft(prompt_text):
     # 创建 Communicate 对象
@@ -50,7 +44,6 @@ async def generate_speech_microsoft(prompt_text):
 
     # 返回 WAV 格式的二进制数据
     return wav_data.getvalue()
-
 
 if __name__ == "__main__":
     audio_binary = asyncio.run(generate_speech_xunfei("你好哇！"))

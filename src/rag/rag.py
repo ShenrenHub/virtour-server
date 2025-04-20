@@ -11,6 +11,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from transformers import AutoTokenizer, AutoModel
 from tts.tts_service import generate_speech_xunfei
 
+
 # 加载嵌入模型
 class LocalEmbeddings(Embeddings):
     def __init__(self, model_name: str):
@@ -81,6 +82,7 @@ async def get_fake_model_answer(query: str) -> AsyncGenerator[str, Any]:
             f.write(audio)
         yield json.dumps({"chunk_id": i + 1, "audio": audio_string, "text": text}) + "\n"
 
+
 def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     print("开始向大模型发送问题")
     # 知识库文本路径
@@ -104,19 +106,19 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     #     model="qwen-plus", messages=prompt, temperature=0, stream=True
     # )
 
-    # DEEPSEEK
-    api_key = os.getenv("DEEPSEEK_API_KEY")
-    client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
-
-    response = client.chat.completions.create(
-        model="deepseek-chat", messages=prompt, temperature=0, stream=True
-    )
+    # # DEEPSEEK
+    # api_key = os.getenv("DEEPSEEK_API_KEY")
+    # client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+    #
+    # response = client.chat.completions.create(
+    #     model="deepseek-chat", messages=prompt, temperature=0, stream=True
+    # )
 
     # OPENAI
-    # client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    # response = client.chat.completions.create(
-    #     model="gpt-4o-mini", messages=prompt, temperature=0, stream=True
-    # )
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    response = client.chat.completions.create(
+        model="gpt-4o-mini", messages=prompt, temperature=0, stream=True
+    )
 
     async def event_generator():
         print("开始流式传输")
@@ -137,7 +139,9 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
                         sentence, buffer = buffer.split(i, 1)
                         sentence += i
                         print("sentence截断，开始生成音频", sentence)
-                        audio_binary = await generate_speech_xunfei(sentence)
+                        # audio_binary = await generate_speech_xunfei(sentence)
+                        # 临时测试: 直接使用本地音频test.wav todo
+                        audio_binary = open("test.wav", "rb").read()
                         # print("音频生成完成", audio_binary)
                         yield json.dumps(
                             {"chunk_id": chunk_id, "text": sentence,

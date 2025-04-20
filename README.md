@@ -1,6 +1,20 @@
-# VirtualTour-Back
+# VirtualTour-Back 
 
-## Installation
+<p align="center">
+ <img src="https://img.shields.io/github/issues/Apricityx/VirtualTour-Back" />
+ <img src="https://img.shields.io/github/forks/Apricityx/VirtualTour-Back" />
+ <img src="https://img.shields.io/github/stars/Apricityx/VirtualTour-Back" />
+ <img src="https://img.shields.io/github/contributors/Apricityx/VirtualTour-Back" /> 
+</p>
+
+
+这是2025年第十八届中国大学生计算机设计大赛虚拟文旅项目的后端代码库，代码的使用方法请参考本文档。
+
+## 🛠️环境安装
+
+Python Version: 3.10
+
+### 🔧使用Python虚拟环境
 
 ---
 Linux
@@ -19,33 +33,51 @@ pip install -r requirements.txt
 ```
 ---
 
-Then, you need to create a file named .env at root dir.
-The content should contain keys below.
+### 🔧使用Anaconda
 
+```shell
+conda create -n vitour python=3.10
+conda activate vitour
+pip install -r requirements.txt
+```
+
+## 📌API_KEY配置
+`.env` 文件包含了所有的**API_KEY**，请自行在 `/src` 目录创建并按照以下格式填写：
+
+```shell
 DEEPSEEK_API_KEY=sk-xxxxxx
 XUNFEI_APP_ID=xxxxxx
 XUNFEI_API_KEY=xxxxxxx
 XUNFEI_API_SECRET=MDJiOWQzxxxxxxxxxx
 QWEN_API_KEY=sk-xxxxx
 OPENAI_API_KEY=sk-xxxxxxx
+```
 
-## Project Structer
+## 🗂项目结构
+
 ```TEXT
 .
+├── src/
+│   ├── mcp_server/
+│   │   ├── mcp.py
+│   │   └── tools.json
+│   ├── rag/
+│   │   ├── base.txt
+│   │   └── rag.py
+│   ├── tts/
+│   │   ├── text_speech.py
+│   │   └── tts_service.py
+│   ├── .env
+│   ├── index.html
+│   └── main.py
 ├── .venv/
-├── mcp_server/
-│   └── mcp.py
-├── rag/
-│   ├── base.txt
-│   ├── rag.py
-│   └── requirements.txt
-├── tts/
-│   ├── text_speech_synthesis.py
-│   └── tts_service.py
-├── .env
-├── index.html
-├── main.py
+├── LICENSE
 ├── README.md
 └── requirements.txt
 ```
-**.env file is missing, you need create my you own**
+
+## ✅ 代办
+- [ ] 编写 Dockerfile 🐳
+
+
+

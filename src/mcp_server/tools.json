@@ -1,0 +1,5 @@
+[
+    {"type": "function", "function": {"name": "Never", "description": "Sing 《Never Gonna Give You Up》"}},
+    {"type": "function", "function": {"name": "say_goodbye", "description": "Print a goodbye message"}},
+    {"type": "function", "function": {"name": "say_something", "description": "Print a custom message"}}
+]

@@ -1,25 +1,21 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# @Author : iflytek
-
-speed = 70  # 语速
-vcn = "x4_mingge"  # 发音人
 import os
-
-import requests
+import sys
 import json
+import time
+import hmac
 import base64
 import hashlib
-import time
-from urllib.parse import urlencode
-import hmac
+import requests
+
+from time import mktime
+from dotenv import load_dotenv
 from datetime import datetime
 from wsgiref.handlers import format_date_time
-from time import mktime
-import sys
+from urllib.parse import urlencode
 
-from dotenv import load_dotenv
-
+# Global Setting
+speed = 70  # 语速
+vcn = "x4_mingge"  # 发音人
 
 class XunfeiTTS:
     def __init__(self):
@@ -197,6 +193,19 @@ def do_query(task_id):
             print("查询任务失败，返回状态码: %s" % code)
             sys.exit(1)
 
+def get_mp3_audio_download_link(query):
+    # 2、执行创建任务
+    text = query
+    task_id = do_create(text)
+
+    # 3、执行查询任务
+    # 创建任务执行成功后，由返回的task_id执行查询任务
+    if task_id:
+        query_result = do_query(task_id)
+
+    # 4、下载到本地
+    Download_addres = query_result
+    return Download_addres
 
 # 1、用户参数，从.env文件中读取
 load_dotenv()
@@ -204,8 +213,8 @@ HOST = "api-dx.xf-yun.com"
 APP_ID = os.getenv("XUNFEI_APP_ID")
 API_KEY = os.getenv("XUNFEI_API_KEY")
 API_SECRET = os.getenv("XUNFEI_API_SECRET")
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     # 2、执行创建任务
     text = "你好，我是数字入"
     task_id = do_create(text)
@@ -225,17 +234,3 @@ if __name__ == "__main__":
     if filename:
         print("\n音频保存成功！")
 
-
-def get_mp3_audio_download_link(query):
-    # 2、执行创建任务
-    text = query
-    task_id = do_create(text)
-
-    # 3、执行查询任务
-    # 创建任务执行成功后，由返回的task_id执行查询任务
-    if task_id:
-        query_result = do_query(task_id)
-
-    # 4、下载到本地
-    Download_addres = query_result
-    return Download_addres

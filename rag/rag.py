@@ -110,19 +110,19 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     #     model="qwen-plus", messages=prompt, temperature=0, stream=True
     # )
 
-    # DEEPSEEK
-    api_key = os.getenv("DEEPSEEK_API_KEY")
-    client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
-
-    response = client.chat.completions.create(
-        model="deepseek-chat", messages=prompt, temperature=0, stream=True
-    )
-
-    # # OPENAI
-    # client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    # # DEEPSEEK
+    # api_key = os.getenv("DEEPSEEK_API_KEY")
+    # client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+    #
     # response = client.chat.completions.create(
-    #     model="gpt-4o-mini", messages=prompt, temperature=0, stream=True
+    #     model="deepseek-chat", messages=prompt, temperature=0, stream=True
     # )
+
+    # OPENAI
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    response = client.chat.completions.create(
+        model="gpt-4o-mini", messages=prompt, temperature=0, stream=True
+    )
 
     async def event_generator():
         print("开始流式传输")

@@ -1,20 +1,15 @@
-import json
-from logging import debug
-from typing import List, Dict
-from fastapi.middleware.cors import CORSMiddleware
-from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Request, UploadFile, File
-from fastapi.responses import StreamingResponse
-import uvicorn
-import asyncio
+import base64
+import os
 
-from openai import BaseModel
-from sse_starlette import EventSourceResponse
+import uvicorn
+from dotenv import load_dotenv
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 
 from mcp_server.mcp_server import get_suggestion
-from rag.rag import get_model_answer, get_fake_model_answer
-from tts.speech_to_text import webm_to_wav, speech_to_text, webm_to_wav_pyav
-import base64
+from rag.rag import get_model_answer
+from tts.speech_to_text import webm_to_wav, speech_to_text
 
 # from rag.rag import get_model_answer
 
@@ -115,5 +110,9 @@ async def get_answer_stream_from_voice(request: Request):
 
 
 if __name__ == "__main__":
+    # 检查vosk模型是否存在
+    if not os.path.exists("model/vosk-model-cn-0.22"):
+        print("请下载Vosk模型到model/vosk-model, 具体请见README")
+        exit(1)
     load_dotenv()
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

@@ -1,4 +1,4 @@
-# VirtualTour-Back 
+# VirtualTour-Back
 
 <p align="center">
  <img src="https://img.shields.io/github/issues/Apricityx/VirtualTour-Back" />
@@ -24,13 +24,16 @@ pip -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
 ---
 Windows
+
 ```cmd
 pip -m venv .venv
 venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
 ---
 
 ### 🔧使用Anaconda
@@ -42,6 +45,7 @@ pip install -r requirements.txt
 ```
 
 ## 📌API_KEY配置
+
 `.env` 文件包含了所有的**API_KEY**，请自行在 `/src` 目录创建并按照以下格式填写：
 
 ```shell
@@ -52,6 +56,17 @@ XUNFEI_API_SECRET=MDJiOWQzxxxxxxxxxx
 QWEN_API_KEY=sk-xxxxx
 OPENAI_API_KEY=sk-xxxxxxx
 ```
+
+## 安装语音转文字模型
+
+本项目采用了 [Vosk](https://alphacephei.com/vosk/) 语音识别模型, 请下载中文模型并放置在 `src/model` 目录下。
+
+```shell
+wget https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip
+unzip vosk-model-cn-0.22.zip
+```
+
+```shell
 
 ## 🗂项目结构
 
@@ -66,7 +81,8 @@ OPENAI_API_KEY=sk-xxxxxxx
 │   │   └── rag.py
 │   ├── tts/
 │   │   ├── text_speech.py
-│   │   └── tts_service.py
+│   ├── model/
+│   │   └── vosk-model-cn-0.22
 │   ├── .env
 │   ├── index.html
 │   └── main.py
@@ -76,7 +92,8 @@ OPENAI_API_KEY=sk-xxxxxxx
 └── requirements.txt
 ```
 
-## ✅ 代办
+## ✅ 待办
+
 - [ ] 编写 Dockerfile 🐳
 
 

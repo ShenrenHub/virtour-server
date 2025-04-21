@@ -8,8 +8,10 @@ from pydub import AudioSegment
 from vosk import KaldiRecognizer, Model
 
 # 如果要从init运行,请将src/替换为../
-MODEL_PATH = "model/vosk-model-small-cn-0.22"
+MODEL_PATH = "model/vosk-model-cn-0.22"
 model = Model(MODEL_PATH)
+
+
 def webm_to_wav_pyav(webm_data: bytes) -> bytes:
     """
     用 PyAV 将内存中的 WebM（通常是 Opus/Vorbis 音轨）解码并写入 WAV。
@@ -42,6 +44,7 @@ def webm_to_wav_pyav(webm_data: bytes) -> bytes:
     # 4) 收尾，取出 bytes
     out_container.close()
     return out_buf.getvalue()
+
 
 def webm_to_wav(webm_data: bytes) -> bytes:
     # 如果前端传的是 data URI，先去掉前缀并 base64 解码

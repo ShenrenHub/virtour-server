@@ -9,7 +9,7 @@ from fastapi.responses import StreamingResponse
 
 from mcp_server.mcp_server import get_suggestion
 from rag.rag import get_model_answer
-from tts.speech_to_text import webm_to_wav, speech_to_text
+from tts.speech_to_text import webm_to_wav, speech_to_text, convert_webm_bytes_to_wav_bytes
 
 # from rag.rag import get_model_answer
 
@@ -33,7 +33,7 @@ async def ping():
 @app.post("/ask")
 async def get_answer_stream(request: Request):
     data = await request.json()
-    print(data)
+    # print(data)
     query = data.get("query")
     if not query:
         return {"error": "Query is required"}
@@ -58,14 +58,14 @@ async def suggest(request: Request):
 @app.post("/voice_suggest")
 async def get_suggest_from_voice(request: Request):
     data = await request.json()
-    print("data =", data)
+    # print("data =", data)
     base64_file = data.get("recording")
     if base64_file.startswith("data:"):
         base64_file = base64_file.split(",")[1]
     webm_data = base64.b64decode(base64_file)
     with open("recording2.webm", "wb") as f:
         f.write(webm_data)
-    wav_data = webm_to_wav(webm_data)
+    wav_data = convert_webm_bytes_to_wav_bytes(webm_data)
     text = speech_to_text(wav_data)
     query = text
     if not query:
@@ -79,7 +79,7 @@ async def get_suggest_from_voice(request: Request):
 @app.post("/voice_ask")
 async def get_answer_stream_from_voice(request: Request):
     data = await request.json()
-    print("data =", data)
+    # print("data =", data)
     # 1. 获取音频文件
     base64_file = data.get("recording")
     # 移除前缀（如果有的话）
@@ -92,7 +92,7 @@ async def get_answer_stream_from_voice(request: Request):
     with open("recording2.webm", "wb") as f:
         f.write(webm_data)
     # 转换为 WAV
-    wav_data = webm_to_wav(webm_data)
+    wav_data = convert_webm_bytes_to_wav_bytes(webm_data)
     # wav保存到本地
     # with open("recording.wav", "wb") as f:
     #     f.write(wav_data)
@@ -115,4 +115,7 @@ if __name__ == "__main__":
         print("请下载Vosk模型到model/vosk-model, 具体请见README")
         exit(1)
     load_dotenv()
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    # uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True,
+                ssl_keyfile="/home/apricityx/Desktop/Workspace/VirtualTour-Back/privkey.pem",
+                ssl_certfile="/home/apricityx/Desktop/Workspace/VirtualTour-Back/cert.pem")

@@ -10,6 +10,7 @@ from langchain.embeddings.base import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from transformers import AutoTokenizer, AutoModel
 from tts.tts_service import generate_speech_xunfei
+from tts.tts_service import generate_speech_microsoft
 
 
 # 加载嵌入模型
@@ -74,7 +75,8 @@ async def get_fake_model_answer(query: str) -> AsyncGenerator[str, Any]:
     ]
 
     for i, text in enumerate(answer):
-        audio = await generate_speech_xunfei(text)
+        audio = await generate_speech_microsoft(text)
+        # audio = await generate_speech_xunfei(text)
         audio64 = base64.b64encode(audio)
         audio_string = audio64.decode("utf-8")
         # 将wav文件保存到本地
@@ -139,9 +141,9 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
                         sentence, buffer = buffer.split(i, 1)
                         sentence += i
                         print("sentence截断，开始生成音频", sentence)
-                        # audio_binary = await generate_speech_xunfei(sentence)
+                        audio_binary = await generate_speech_microsoft(sentence)
                         # 临时测试: 直接使用本地音频test.wav todo
-                        audio_binary = open("test.wav", "rb").read()
+                        # audio_binary = open("test.wav", "rb").read()
                         # print("音频生成完成", audio_binary)
                         yield json.dumps(
                             {"chunk_id": chunk_id, "text": sentence,

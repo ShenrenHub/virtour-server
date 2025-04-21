@@ -26,6 +26,8 @@ async def generate_speech_xunfei(prompt_text):
 
 # 基本功能测试：文本生成语音
 async def generate_speech_microsoft(prompt_text):
+    # 去掉所有星号
+    prompt_text = prompt_text.replace("*", "")
     # 创建 Communicate 对象
     communicate = edge_tts.Communicate(text=prompt_text, voice="zh-CN-YunxiNeural")
     # 生成语音流
@@ -35,17 +37,24 @@ async def generate_speech_microsoft(prompt_text):
     async for chunk in communicate.stream():
         if chunk["type"] == "audio":
             audio_data.write(chunk["data"])
-    # todo =====================
-    audio_data = open("test2.mp3", "rb")
-    audio_data = BytesIO(audio_data.read())
-    # todo =====================
+    # # todo =====================
+    # audio_data = open("test2.mp3", "rb")
+    # audio_data = BytesIO(audio_data.read())
+    # 保存到本地
+    with open("microsoft.mp3", "wb") as audio_file:
+        audio_file.write(audio_data.getvalue())
+    # # todo =====================
     # 将 BytesIO 的指针重置到开始
     audio_data.seek(0)
 
     # 使用 pydub 将 MP3 转换为 WAV
     audio = AudioSegment.from_mp3(audio_data)
     wav_data = BytesIO()
-    audio.export(wav_data, format="wav")
+    # 码率设置为 16kHz、单声道
+    audio = audio.set_channels(1).set_frame_rate(16000).set_sample_width(2)
+    # 导出 WAV 格式到 BytesIO
+    audio.export(wav_data, format="wav", bitrate="16k")
+    # 保存到本地
 
     # 返回 WAV 格式的二进制数据
     return wav_data.getvalue()

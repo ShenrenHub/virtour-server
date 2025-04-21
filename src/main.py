@@ -11,7 +11,7 @@ import asyncio
 from openai import BaseModel
 from sse_starlette import EventSourceResponse
 
-from mcp_server.mcp import get_suggestion
+from mcp_server.mcp_server import get_suggestion
 from rag.rag import get_model_answer, get_fake_model_answer
 from tts.speech_to_text import webm_to_wav, speech_to_text, webm_to_wav_pyav
 import base64
@@ -55,8 +55,30 @@ async def suggest(request: Request):
     query = data.get("query")
     if not query:
         return {"error": "Query is required"}
-    suggestions = await get_suggestion(query)
-    return {"suggestions": suggestions}
+    suggestion = await get_suggestion(query)
+    print("返回:", {"suggestion": suggestion})
+    return {"suggestion": suggestion}
+
+
+@app.post("/voice_suggest")
+async def get_suggest_from_voice(request: Request):
+    data = await request.json()
+    print("data =", data)
+    base64_file = data.get("recording")
+    if base64_file.startswith("data:"):
+        base64_file = base64_file.split(",")[1]
+    webm_data = base64.b64decode(base64_file)
+    with open("recording2.webm", "wb") as f:
+        f.write(webm_data)
+    wav_data = webm_to_wav(webm_data)
+    text = speech_to_text(wav_data)
+    query = text
+    if not query:
+        return {"suggestion": "None"}
+    # 使用 StreamingResponse 流式传输 NDJSON 格式数据
+    suggestion = await get_suggestion(query)
+    print("语音建议:", {"suggestion": suggestion})
+    return {"suggestion": suggestion}
 
 
 @app.post("/voice_ask")
@@ -77,8 +99,8 @@ async def get_answer_stream_from_voice(request: Request):
     # 转换为 WAV
     wav_data = webm_to_wav(webm_data)
     # wav保存到本地
-    with open("recording.wav", "wb") as f:
-        f.write(wav_data)
+    # with open("recording.wav", "wb") as f:
+    #     f.write(wav_data)
     # 2. 音频转换为文本
     text = speech_to_text(wav_data)
 

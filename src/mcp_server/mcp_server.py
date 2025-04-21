@@ -1,6 +1,8 @@
 import os
 import json
 import asyncio
+
+from dotenv import load_dotenv
 from openai import OpenAI
 from typing import Any
 from torch.onnx import export
@@ -14,6 +16,8 @@ DEEPSEEK_API_BASE = "https://api.deepseek.com"
 client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=DEEPSEEK_API_BASE)
 
 mcp = FastMCP("deepseek-v3-interface-demo")
+
+
 async def get_deepseek_response(query: str) -> str:
     """
     Get response from the DeepSeek API using OpenAI library with tool calling capability.
@@ -25,8 +29,18 @@ async def get_deepseek_response(query: str) -> str:
         with open(json_path, 'r', encoding='utf-8') as file:
             tools = json.load(file)
         # API调用
+        # response = client.chat.completions.create(
+        #     model="deepseek-chat",#chat对应V3，reasoner对应R1
+        #     messages=[{"role": "user", "content": query}],
+        #     tools=tools,
+        #     tool_choice="auto",
+        #     stream=False,
+        #     max_tokens=2048,
+        # )
+        # OPENAI
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         response = client.chat.completions.create(
-            model="deepseek-chat",#chat对应V3，reasoner对应R1
+            model="gpt-4o-mini",  # chat对应V3，reasoner对应R1
             messages=[{"role": "user", "content": query}],
             tools=tools,
             tool_choice="auto",
@@ -40,10 +54,17 @@ async def get_deepseek_response(query: str) -> str:
             tool_call = choice.message.tool_calls[0]
             function_name = tool_call.function.name
             if function_name in globals():
-                result = await globals()[function_name]({})
-                return f"Tool {function_name} called: {result}"
-            return f"Unknown tool: {function_name}"
-        return choice.message.content
+                return function_name
+            return "None"
+        return "None"
+        # if choice.message.tool_calls:
+        #     tool_call = choice.message.tool_calls[0]
+        #     function_name = tool_call.function.name
+        #     if function_name in globals():
+        #         result = await globals()[function_name]({})
+        #         return f"Tool {function_name} called: {result}"
+        #     return f"Unknown tool: {function_name}"
+        # return choice.message.content
 
     except Exception as e:
         return f"Error: An unexpected error occurred - {str(e)}"
@@ -66,6 +87,7 @@ async def say_something(query: dict) -> str:
     """Print a custom message."""
     return "This is a message from the third interface!"
 
+
 async def MCP_test():
     query = "请唱一下never gonna give you up"
     print(f"我的query是：{query}")
@@ -85,9 +107,12 @@ async def MCP_test():
     response = await get_deepseek_response(query)
     print(response)
 
+
 async def get_suggestion(query: str) -> str:
     response = await get_deepseek_response(query)
     return response
 
+
 if __name__ == "__main__":
+    load_dotenv()
     asyncio.run(MCP_test())

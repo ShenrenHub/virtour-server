@@ -1,5 +1,7 @@
 [
-    {"type": "function", "function": {"name": "Never", "description": "Sing 《Never Gonna Give You Up》"}},
-    {"type": "function", "function": {"name": "say_goodbye", "description": "Print a goodbye message"}},
-    {"type": "function", "function": {"name": "say_something", "description": "Print a custom message"}}
+    {"type": "function", "function": {"name": "go_shoupiaochu", "description": "切换到地点：售票处"}},
+    {"type": "function", "function": {"name": "go_huazhongyou", "description": "切换到地点：画中游"}},
+    {"type": "function", "function": {"name": "go_changlang", "description": "切换到地点：长廊"}},
+    {"type": "function", "function": {"name": "go_wenchangge", "description": "切换到地点：文昌阁"}},
+    {"type": "function", "function": {"name": "go_kunminghu", "description": "切换到地点：昆明湖"}}
 ]

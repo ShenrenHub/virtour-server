@@ -1,10 +1,12 @@
 import base64
 import os
 
+import requests
 import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Response
 from fastapi.responses import StreamingResponse
 
 from mcp_server.mcp_server import get_suggestion
@@ -107,6 +109,22 @@ async def get_answer_stream_from_voice(request: Request):
         get_model_answer(query),
         media_type="application/x-ndjson"
     )
+
+
+@app.get("/google_map.js")
+def get_js():
+    load_dotenv()
+    api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+    url = f"https://maps.googleapis.com/maps/api/js?key={api_key}&callback=map_initialize&v=weekly"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            content = response.text
+        else:
+            content = 'console.error("Failed to load Google Maps API");'
+    except requests.RequestException:
+        content = 'console.error("Failed to load Google Maps API");'
+    return Response(content=content, media_type="application/javascript")
 
 
 if __name__ == "__main__":

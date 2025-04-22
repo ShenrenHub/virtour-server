@@ -11,10 +11,9 @@ from dotenv import load_dotenv
 from pydub import AudioSegment
 from vosk import KaldiRecognizer, Model
 
-
 # 如果要从init运行,请将src/替换为../
-# MODEL_PATH = "model/vosk-model-cn-0.22"
-# model = Model(MODEL_PATH)
+MODEL_PATH = "model/vosk-model-cn-0.22"
+model = Model(MODEL_PATH)
 
 
 def webm_to_wav_pyav(webm_data: bytes) -> bytes:

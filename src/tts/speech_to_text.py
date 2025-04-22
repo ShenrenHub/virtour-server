@@ -1,17 +1,20 @@
 import base64
 import io
 import json
+import os
 import subprocess
 import wave
 
 import av
 import ffmpeg
+from dotenv import load_dotenv
 from pydub import AudioSegment
 from vosk import KaldiRecognizer, Model
 
+
 # 如果要从init运行,请将src/替换为../
-MODEL_PATH = "model/vosk-model-cn-0.22"
-model = Model(MODEL_PATH)
+# MODEL_PATH = "model/vosk-model-cn-0.22"
+# model = Model(MODEL_PATH)
 
 
 def webm_to_wav_pyav(webm_data: bytes) -> bytes:
@@ -66,16 +69,39 @@ def webm_to_wav(webm_data: bytes) -> bytes:
     return buf.getvalue()
 
 
-def speech_to_text(wav_data: bytes) -> str:
+def convert_webm_bytes_to_wav_bytes(webm_bytes: bytes) -> bytes:
+    """
+    将 webm 音频二进制转换为 wav 格式（单声道、16kHz、16bit）的音频二进制
+    """
+    process = subprocess.Popen(
+        [
+            'ffmpeg',
+            '-i', 'pipe:0',  # 输入来自 stdin
+            '-ac', '1',  # 单声道（1 channel）
+            '-ar', '16000',  # 采样率 16kHz
+            '-sample_fmt', 's16',  # 16-bit PCM
+            '-f', 'wav',  # 输出格式为 wav
+            'pipe:1'  # 输出到 stdout
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+
+    wav_bytes, error = process.communicate(input=webm_bytes)
+
+    if process.returncode != 0:
+        raise RuntimeError(f"ffmpeg 转换失败: {error.decode()}")
+
+    return wav_bytes
+
+
+def speech_to_text_vosk(wav_data: bytes) -> str:
     """使用 Vosk 将 WAV 音频转换为文字"""
     recognizer = KaldiRecognizer(model, 16000)
 
     # 打开 WAV 数据
     wf = wave.open(io.BytesIO(wav_data), "rb")
-    # if wf.getnchannels() != 1 or wf.getsampwidth() != 2 or wf.getframerate() != 16000:
-    #     # 如果格式不符合 Vosk 要求，需预处理（这里简化，实际需转换）
-    #     raise ValueError("音频格式必须为单声道，16位，16000Hz")
-
     text = ""
     while True:
         data = wf.readframes(4000)
@@ -92,28 +118,57 @@ def speech_to_text(wav_data: bytes) -> str:
     return text.strip()
 
 
-def convert_webm_bytes_to_wav_bytes(webm_bytes: bytes) -> bytes:
+def speech_to_text_baidu(wav_data: bytes) -> str:
+    import requests
+    url = "https://vop.baidu.com/server_api"
+
+    payload = json.dumps({
+        "format": "pcm",
+        "rate": 16000,
+        "channel": 1,
+        "cuid": "HXNHUGUYiQqnD7D4RdOZYDqfWu03uEIx",
+        "token": get_baidu_access_token(),
+        "speech": base64.b64encode(wav_data).decode('utf-8'),
+        "len": len(wav_data),
+    }, ensure_ascii=False)
+    headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload.encode("utf-8"))
+
+    print("百度识别完成", response.text)
+    if response.status_code != 200:
+        print("百度语音识别失败:", response.text)
+        return "文字识别失败"
+    # 解析返回的 JSON 数据
+    result = response.json()
+    final_text = result["result"][0]
+    return final_text
+
+
+def get_baidu_access_token():
     """
-    将 webm 音频二进制转换为 wav 格式（单声道、16kHz、16bit）的音频二进制
+    使用 AK，SK 生成鉴权签名（Access Token）
+    :return: access_token，或是None(如果错误)
     """
-    process = subprocess.Popen(
-        [
-            'ffmpeg',
-            '-i', 'pipe:0',          # 输入来自 stdin
-            '-ac', '1',              # 单声道（1 channel）
-            '-ar', '16000',          # 采样率 16kHz
-            '-sample_fmt', 's16',    # 16-bit PCM
-            '-f', 'wav',             # 输出格式为 wav
-            'pipe:1'                 # 输出到 stdout
-        ],
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
-    )
+    import requests
+    load_dotenv()
+    url = "https://aip.baidubce.com/oauth/2.0/token"
+    baidu_api_key = os.getenv("BAIDU_API_KEY")
+    baidu_app_secret = os.getenv("BAIDU_SECRET_KEY")
+    print("baidu_api_key:", baidu_api_key)
+    print("baidu_app_secret:", baidu_app_secret)
+    params = {"grant_type": "client_credentials", "client_id": baidu_api_key,
+              "client_secret": baidu_app_secret}
+    return str(requests.post(url, params=params).json().get("access_token"))
 
-    wav_bytes, error = process.communicate(input=webm_bytes)
 
-    if process.returncode != 0:
-        raise RuntimeError(f"ffmpeg 转换失败: {error.decode()}")
-
-    return wav_bytes
+if __name__ == "__main__":
+    # 测试代码
+    # 从本地读取microsoft.wav
+    test_wav = open("/home/apricityx/Desktop/Workspace/VirtualTour-Back/src/microsoft.wav", "rb").read()
+    text = speech_to_text_baidu(test_wav)
+    print("识别结果:", text)
+    pass

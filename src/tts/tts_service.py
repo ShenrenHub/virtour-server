@@ -59,7 +59,6 @@ async def generate_speech_microsoft(prompt_text):
     # 返回 WAV 格式的二进制数据
     return wav_data.getvalue()
 
-
 if __name__ == "__main__":
     audio_binary = asyncio.run(generate_speech_xunfei("你好哇！"))
     print(audio_binary)

@@ -9,7 +9,7 @@ from fastapi.responses import StreamingResponse
 
 from mcp_server.mcp_server import get_suggestion
 from rag.rag import get_model_answer
-from tts.speech_to_text import webm_to_wav, speech_to_text, convert_webm_bytes_to_wav_bytes
+from tts.speech_to_text import webm_to_wav, convert_webm_bytes_to_wav_bytes, speech_to_text_baidu
 
 # from rag.rag import get_model_answer
 
@@ -66,7 +66,7 @@ async def get_suggest_from_voice(request: Request):
     with open("recording2.webm", "wb") as f:
         f.write(webm_data)
     wav_data = convert_webm_bytes_to_wav_bytes(webm_data)
-    text = speech_to_text(wav_data)
+    text = speech_to_text_baidu(wav_data)
     query = text
     if not query:
         return {"suggestion": "None"}
@@ -97,7 +97,7 @@ async def get_answer_stream_from_voice(request: Request):
     # with open("recording.wav", "wb") as f:
     #     f.write(wav_data)
     # 2. 音频转换为文本
-    text = speech_to_text(wav_data)
+    text = speech_to_text_baidu(wav_data)
 
     query = text
     if not query:

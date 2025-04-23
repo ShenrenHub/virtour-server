@@ -35,7 +35,7 @@ async def ping():
 @app.post("/ask")
 async def get_answer_stream(request: Request):
     data = await request.json()
-    # print(data)
+    print(data)
     query = data.get("query")
     if not query:
         return {"error": "Query is required"}

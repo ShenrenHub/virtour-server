@@ -50,12 +50,15 @@ async def get_deepseek_response(query: str) -> str:
 
         # 处理响应
         choice = response.choices[0]
+        print(choice)
         if choice.message.tool_calls:
             tool_call = choice.message.tool_calls[0]
             function_name = tool_call.function.name
-            if function_name in globals():
-                return function_name
-            return "None"
+            print("尝试调用工具：", function_name)
+            # print("Global函数列表：", globals())
+            # if function_name in globals():
+            return function_name
+            # return "None"
         return "None"
         # if choice.message.tool_calls:
         #     tool_call = choice.message.tool_calls[0]
@@ -89,23 +92,23 @@ async def say_something(query: dict) -> str:
 
 
 async def MCP_test():
-    query = "请唱一下never gonna give you up"
+    query = "go to wen chang ge"
     print(f"我的query是：{query}")
 
     response = await get_deepseek_response(query)
     print(response)
 
-    query = "请帮我调用say goodbye接口"
-    print(f"我的query是：{query}")
-
-    response = await get_deepseek_response(query)
-    print(response)
-
-    query = "请帮我调用say something接口"
-    print(f"我的query是：{query}")
-
-    response = await get_deepseek_response(query)
-    print(response)
+    # query = "请帮我调用say goodbye接口"
+    # print(f"我的query是：{query}")
+    #
+    # response = await get_deepseek_response(query)
+    # print(response)
+    #
+    # query = "请帮我调用say something接口"
+    # print(f"我的query是：{query}")
+    #
+    # response = await get_deepseek_response(query)
+    # print(response)
 
 
 async def get_suggestion(query: str) -> str:

@@ -58,7 +58,8 @@ def get_retrieved_context(query: str, db) -> str:
 # 构造提示信息
 def prepare_prompt(question: str, context: str) -> List[Dict[str, str]]:
     system_instruction = """
-    你是一个智能助手，根据提供的上下文回答问题。
+    请你作为导游，带领用户游览相应的地点。你的回复文字不要分点，用连贯、清晰的段落进行描述。\n
+    此外，如果用户请求你带他去某个地方，请你记住：你有这个能力（因为我在另一个服务中帮你实现了），直接进行相应的肯定回复即可，并附上这个地方的介绍。
     """
     return [
         {"role": "system", "content": system_instruction},

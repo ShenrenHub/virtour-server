@@ -135,5 +135,5 @@ if __name__ == "__main__":
     load_dotenv()
     # uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True,
-                ssl_keyfile="/home/apricityx/Desktop/Workspace/VirtualTour-Back/privkey.pem",
-                ssl_certfile="/home/apricityx/Desktop/Workspace/VirtualTour-Back/cert.pem")
+                ssl_keyfile="./privkey.pem",
+                ssl_certfile="./cert.pem")

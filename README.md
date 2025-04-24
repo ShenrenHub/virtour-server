@@ -57,14 +57,25 @@ QWEN_API_KEY=sk-xxxxx
 OPENAI_API_KEY=sk-xxxxxxx
 ```
 
-## 安装语音转文字模型
+## 证书配置
 
-本项目采用了 [Vosk](https://alphacephei.com/vosk/) 语音识别模型, 请下载中文模型并放置在 `src/model` 目录下。
+因为硬件加速强制要求在安全的网络上下文环境中，故必须采用https进行部署。
+将privkey.pem和cert.pem放进src目录中即可。
 
-```shell
-wget https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip
-unzip vosk-model-cn-0.22.zip
-```
+
+[//]: # (## 安装语音转文字模型)
+
+[//]: # ()
+[//]: # (本项目采用了 [Vosk]&#40;https://alphacephei.com/vosk/&#41; 语音识别模型, 请下载中文模型并放置在 `src/model` 目录下。)
+
+[//]: # ()
+[//]: # (```shell)
+
+[//]: # (wget https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip)
+
+[//]: # (unzip vosk-model-cn-0.22.zip)
+
+[//]: # (```)
 
 ```shell
 
@@ -80,14 +91,15 @@ unzip vosk-model-cn-0.22.zip
 │   │   ├── base.txt
 │   │   └── rag.py
 │   ├── tts/
-│   │   ├── text_speech.py
-│   ├── model/
-│   │   └── vosk-model-cn-0.22
+│   │   └── text_speech.py
 │   ├── .env
 │   ├── index.html
 │   └── main.py
 ├── .venv/
 ├── LICENSE
+├── README.md
+├── cert.pem
+├── privkey.pem
 ├── README.md
 └── requirements.txt
 ```

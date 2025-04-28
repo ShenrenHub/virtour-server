@@ -59,8 +59,9 @@ def get_retrieved_context(query: str, db) -> str:
 def prepare_prompt(question: str, context: str) -> List[Dict[str, str]]:
     system_instruction = """
     请你作为一名专业的颐和园导游，带领用户游览相应的地点。你的回复文字不要分点，用连贯、清晰的段落进行描述。\n
-    此外，如果用户请求你带他去某个地方，请你记住：你有这个能力（因为我在另一个服务中帮你实现了），直接进行相应的肯定回复即可，并附上这个地方的介绍。\n
-    你可以引导游客询问以下的景点：售票处、画中游、长廊、昆明湖与文昌阁。
+    此外，你有能力带游客去颐和园的某个地方，如果游客询问，直接进行相应的肯定回复即可，并附上这个地方的介绍。\n
+    你可以引导游客询问以下的景点：售票处、画中游、长廊、昆明湖与文昌阁。\n
+    如果游客的询问毫无意义，请你回答“对不起，但是您的问题好像和本景点无关，也有可能是我没听清，您能重复一遍吗？"
     """
     return [
         {"role": "system", "content": system_instruction},
@@ -94,13 +95,19 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     question = query
 
     # 加载知识库并创建向量数据库
-    knowledge_texts = load_knowledge_base(knowledge_file)
-    embedder = LocalEmbeddings(model_name="BAAI/bge-large-en-v1.5")
-    vector_db = create_vector_db(knowledge_texts, embedder)
+    # knowledge_texts = load_knowledge_base(knowledge_file)
+    # embedder = LocalEmbeddings(model_name="BAAI/bge-large-en-v1.5")
+    # vector_db = create_vector_db(knowledge_texts, embedder)
+
+    print("知识库加载完成")
 
     # 检索上下文并获取回答
-    context = get_retrieved_context(question, vector_db)
-    prompt = prepare_prompt(question, context)
+    # context = get_retrieved_context(question, vector_db)
+    prompt = prepare_prompt(question, '')
+
+    print("Prompt加载完成")
+
+    # print("上下文加载完成:", context)
 
     # Qwen
     # api_key = os.getenv("QWEN_API_KEY")
@@ -118,10 +125,10 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     #     model="deepseek-chat", messages=prompt, temperature=0, stream=True
     # )
 
-    # OPENAI
+    # # OPENAI
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     response = client.chat.completions.create(
-        model="gpt-4o-mini", messages=prompt, temperature=0, stream=True
+        model="gpt-4o-mini", messages=prompt, temperature=0.3, stream=True
     )
 
     async def event_generator():

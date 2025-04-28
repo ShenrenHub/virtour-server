@@ -6,16 +6,12 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from typing import Any
 from torch.onnx import export
-from mcp.server.fastmcp import FastMCP
-
-# DeepSeek API 配置
-DEEPSEEK_API_KEY = "sk-...."
-DEEPSEEK_API_BASE = "https://api.deepseek.com"
+# from mcp.server.fastmcp import FastMCP
 
 # 初始化 OpenAI 客户端
-client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=DEEPSEEK_API_BASE)
+# client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=DEEPSEEK_API_BASE)
 
-mcp = FastMCP("deepseek-v3-interface-demo")
+# mcp = FastMCP("deepseek-v3-interface-demo")
 
 
 async def get_deepseek_response(query: str) -> str:
@@ -47,6 +43,19 @@ async def get_deepseek_response(query: str) -> str:
             stream=False,
             max_tokens=2048,
         )
+        
+        # Qwen
+        # api_key = os.getenv("QWEN_API_KEY")
+        # base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+        # client = OpenAI(api_key=api_key, base_url=base_url)
+        # response = client.chat.completions.create(
+        #     model="qwen-plus",
+        #     messages=[{"role": "user", "content": query}],
+        #     tools=tools,
+        #     tool_choice="auto",
+        #     stream=False,
+        #     max_tokens=2048,
+        # )
 
         # 处理响应
         choice = response.choices[0]
@@ -71,25 +80,6 @@ async def get_deepseek_response(query: str) -> str:
 
     except Exception as e:
         return f"Error: An unexpected error occurred - {str(e)}"
-
-
-# 接口定义
-@mcp.tool()
-async def Never(query: dict) -> str:
-    return "Never Gonna Give U Up!!!"
-
-
-@mcp.tool()
-async def say_goodbye(query: dict) -> str:
-    """Print a goodbye message."""
-    return "Goodbye from the second interface!"
-
-
-@mcp.tool()
-async def say_something(query: dict) -> str:
-    """Print a custom message."""
-    return "This is a message from the third interface!"
-
 
 async def MCP_test():
     query = "go to wen chang ge"

@@ -29,7 +29,7 @@ async def generate_speech_microsoft(prompt_text):
     # 去掉所有星号
     prompt_text = prompt_text.replace("*", "")
     # 创建 Communicate 对象
-    communicate = edge_tts.Communicate(text=prompt_text, voice="zh-CN-YunxiNeural")
+    communicate = edge_tts.Communicate(text=prompt_text, voice="zh-CN-XiaoxiaoNeural")
     # 生成语音流
 
     # 收集音频数据

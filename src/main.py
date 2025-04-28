@@ -129,11 +129,11 @@ def get_js():
 
 if __name__ == "__main__":
     # 检查vosk模型是否存在
-    if not os.path.exists("model/vosk-model-cn-0.22"):
-        print("请下载Vosk模型到model/vosk-model, 具体请见README")
-        exit(1)
+#    if not os.path.exists("model/vosk-model-cn-0.22"):
+ #       print("请下载Vosk模型到model/vosk-model, 具体请见README")
+  #      exit(1)
     load_dotenv()
     # uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True,
+    uvicorn.run("main:app", host="0.0.0.0", port=8000,
                 ssl_keyfile="./privkey.pem",
                 ssl_certfile="./cert.pem")

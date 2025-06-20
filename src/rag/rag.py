@@ -110,12 +110,12 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     # print("上下文加载完成:", context)
 
     # Qwen
-    # api_key = os.getenv("QWEN_API_KEY")
-    # base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-    # client = OpenAI(api_key=api_key, base_url=base_url)
-    # response = client.chat.completions.create(
-    #     model="qwen-plus", messages=prompt, temperature=0, stream=True
-    # )
+    api_key = os.getenv("QWEN_API_KEY")
+    base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    client = OpenAI(api_key=api_key, base_url=base_url)
+    response = client.chat.completions.create(
+        model="qwen-plus", messages=prompt, temperature=0, stream=True
+    )
 
     # # DEEPSEEK
     # api_key = os.getenv("DEEPSEEK_API_KEY")
@@ -126,10 +126,10 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     # )
 
     # # OPENAI
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    response = client.chat.completions.create(
-        model="gpt-4o-mini", messages=prompt, temperature=0.3, stream=True
-    )
+    # client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    # response = client.chat.completions.create(
+    #     model="gpt-4o-mini", messages=prompt, temperature=0.3, stream=True
+    # )
 
     async def event_generator():
         print("开始流式传输")

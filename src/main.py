@@ -4,10 +4,11 @@ import os
 import requests
 import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Response
 from fastapi.responses import StreamingResponse
+from starlette.responses import FileResponse
 
 from mcp_server.mcp_server import get_suggestion
 from rag.rag import get_model_answer
@@ -126,6 +127,20 @@ def get_js():
         content = 'console.error("Failed to load Google Maps API");'
     return Response(content=content, media_type="application/javascript")
 
+
+@app.get("/assets/{file_path:path}")
+async def get_asset(file_path: str):
+    # 构造文件的完整路径
+    ASSETS_DIR = os.path.join(os.path.dirname(__file__), "assets")
+
+    file_full_path = os.path.join(ASSETS_DIR, file_path)
+
+    # 检查文件是否存在
+    if not os.path.isfile(file_full_path):
+        raise HTTPException(status_code=404, detail="File not found")
+
+    # 返回文件响应
+    return FileResponse(file_full_path)
 
 if __name__ == "__main__":
     # 检查vosk模型是否存在

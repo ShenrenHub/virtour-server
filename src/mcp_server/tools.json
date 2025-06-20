@@ -2,6 +2,6 @@
     {"type": "function", "function": {"name": "go_shoupiaochu", "description": "介绍或者前往地点：售票处"}},
     {"type": "function", "function": {"name": "go_huazhongyou", "description": "介绍或者前往地点：画中游"}},
     {"type": "function", "function": {"name": "go_changlang", "description": "介绍或者前往地点：长廊"}},
-    {"type": "function", "function": {"name": "go_wenchangge", "description": "介绍或者前往文昌阁"}},
+    {"type": "function", "function": {"name": "go_wenchangge", "description": "介绍或者前往：文昌阁"}},
     {"type": "function", "function": {"name": "go_kunminghu", "description": "介绍或者前往地点：昆明湖"}}
 ]

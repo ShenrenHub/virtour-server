@@ -63,19 +63,14 @@ OPENAI_API_KEY=sk-xxxxxxx
 将privkey.pem和cert.pem放进src目录中即可。
 
 
-[//]: # (## 安装语音转文字模型)
+## 安装语音转文字模型
 
-[//]: # ()
-[//]: # (本项目采用了 [Vosk]&#40;https://alphacephei.com/vosk/&#41; 语音识别模型, 请下载中文模型并放置在 `src/model` 目录下。)
+本项目采用了 [Vosk](https://alphacephei.com/vosk/) 语音识别模型，请下载中文模型并放置在 `src/model` 目录下。
 
-[//]: # ()
-[//]: # (```shell)
+```shell
+wget https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip
+unzip vosk-model-cn-0.22.zip
 
-[//]: # (wget https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip)
-
-[//]: # (unzip vosk-model-cn-0.22.zip)
-
-[//]: # (```)
 
 ```shell
 
@@ -84,14 +79,19 @@ OPENAI_API_KEY=sk-xxxxxxx
 ```TEXT
 .
 ├── src/
+│   ├── assets/
+│   │   ├── panorama/
+│   │   ├── preview/
+│   │   └── positions.json
 │   ├── mcp_server/
-│   │   ├── mcp.py
-│   │   └── tools.json
+│   │   └── mcp_server.py
 │   ├── rag/
 │   │   ├── base.txt
 │   │   └── rag.py
 │   ├── tts/
-│   │   └── text_speech.py
+│   │   ├── speech_to_text.py
+│   │   ├── text_speech_synthesis.py
+│   │   └── tts_service.py
 │   ├── .env
 │   ├── index.html
 │   └── main.py
@@ -106,7 +106,7 @@ OPENAI_API_KEY=sk-xxxxxxx
 
 ## ✅ 待办
 
-- [ ] 编写 Dockerfile 🐳
+- [ ] 整理代码
 
 
 

@@ -13,6 +13,13 @@ from datetime import datetime
 from wsgiref.handlers import format_date_time
 from urllib.parse import urlencode
 
+# User Info Setting
+load_dotenv()
+HOST = "api-dx.xf-yun.com"
+APP_ID = os.getenv("XUNFEI_APP_ID")
+API_KEY = os.getenv("XUNFEI_API_KEY")
+API_SECRET = os.getenv("XUNFEI_API_SECRET")
+
 # Global Setting
 speed = 70  # 语速
 vcn = "x4_mingge"  # 发音人
@@ -148,7 +155,6 @@ class XunfeiTTS:
 # 创建任务
 def do_create(text):
     # 调用创建任务接口
-
     test_task = XunfeiTTS()
     create_result = test_task.test_create(text)
     print("create_response:", json.dumps(create_result))
@@ -207,24 +213,19 @@ def get_mp3_audio_download_link(query):
     Download_addres = query_result
     return Download_addres
 
-# 1、用户参数，从.env文件中读取
-load_dotenv()
-HOST = "api-dx.xf-yun.com"
-APP_ID = os.getenv("XUNFEI_APP_ID")
-API_KEY = os.getenv("XUNFEI_API_KEY")
-API_SECRET = os.getenv("XUNFEI_API_SECRET")
+
 
 if __name__ == "__main__":
-    # 2、执行创建任务
+    # 执行创建任务
     text = "你好，我是数字入"
     task_id = do_create(text)
 
-    # 3、执行查询任务
+    # 执行查询任务
     # 创建任务执行成功后，由返回的task_id执行查询任务
     if task_id:
         query_result = do_query(task_id)
 
-    # 4、下载到本地
+    # 下载到本地
     Download_addres = query_result
     f = requests.get(Download_addres)
     # 下载文件，根据需要更改文件后缀

@@ -1,10 +1,10 @@
 # virtour-server
 
 <p align="center">
- <img src="https://img.shields.io/github/issues/ShenrenHub/virtour-server" />
- <img src="https://img.shields.io/github/forks/ShenrenHub/virtour-server" />
- <img src="https://img.shields.io/github/stars/ShenrenHub/virtour-server" />
- <img src="https://img.shields.io/github/contributors/ShenrenHub/virtour-server" /> 
+ <img src="https://img.shields.io/github/issues/shenrenhub/virtour-server" />
+ <img src="https://img.shields.io/github/forks/shenrenhub/virtour-server" />
+ <img src="https://img.shields.io/github/stars/shenrenhub/virtour-server" />
+ <img src="https://img.shields.io/github/contributors/shenrenhub/virtour-server" /> 
 </p>
 
 

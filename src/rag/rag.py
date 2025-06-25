@@ -39,11 +39,23 @@ def load_knowledge_base(file_path: str) -> List[str]:
     with open(file_path, "r", encoding="utf-8") as f:
         return [line.strip() for line in f.readlines() if line.strip()]
 
-# 创建向量数据库
-def create_vector_db(texts: List[str], embedder: Embeddings):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
-    all_splits = text_splitter.create_documents(texts)
-    return FAISS.from_documents(all_splits, embedding=embedder)
+# # 创建向量数据库
+# def create_vector_db(texts: List[str], embedder: Embeddings):
+#     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
+#     all_splits = text_splitter.create_documents(texts)
+#     return FAISS.from_documents(all_splits, embedding=embedder)
+
+def load_db(texts: List[str], embedder: Embeddings, index_path: str = "./vector_store") -> FAISS:
+    if os.path.exists(index_path):
+        print("正在从本地加载向量数据库...")
+        db = FAISS.load_local(index_path, embeddings=embedder)
+    else:
+        print("本地向量数据库不存在，正在重新构建...")
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
+        all_splits = text_splitter.create_documents(texts)
+        db = FAISS.from_documents(all_splits, embedding=embedder)
+        db.save_local(index_path)
+    return db
 
 # 获取相关上下文
 def get_retrieved_context(query: str, db) -> str:
@@ -87,7 +99,9 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     # 加载知识库并创建向量数据库
     knowledge_texts = load_knowledge_base(knowledge_file)
     embedder = LocalEmbeddings(model_name="BAAI/bge-large-en-v1.5")
-    vector_db = create_vector_db(knowledge_texts, embedder)
+    index_path = "./vector_store"
+    # vector_db = create_vector_db(knowledge_texts, embedder)
+    vector_db = load_db(knowlege_texts, embedder, index_path)
 
     print("知识库加载完成")
 

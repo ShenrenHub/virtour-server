@@ -1,10 +1,10 @@
-# VirtualTour-Back
+# virtour-server
 
 <p align="center">
- <img src="https://img.shields.io/github/issues/Apricityx/VirtualTour-Back" />
- <img src="https://img.shields.io/github/forks/Apricityx/VirtualTour-Back" />
- <img src="https://img.shields.io/github/stars/Apricityx/VirtualTour-Back" />
- <img src="https://img.shields.io/github/contributors/Apricityx/VirtualTour-Back" /> 
+ <img src="https://img.shields.io/github/issues/ShenrenHub/virtour-server" />
+ <img src="https://img.shields.io/github/forks/ShenrenHub/virtour-server" />
+ <img src="https://img.shields.io/github/stars/ShenrenHub/virtour-server" />
+ <img src="https://img.shields.io/github/contributors/ShenrenHub/virtour-server" /> 
 </p>
 
 

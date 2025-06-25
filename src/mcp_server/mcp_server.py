@@ -1,20 +1,10 @@
 import os
 import json
 import asyncio
-
 from dotenv import load_dotenv
 from openai import OpenAI
 from typing import Any
 from torch.onnx import export
-
-
-# from mcp.server.fastmcp import FastMCP
-
-# 初始化 OpenAI 客户端
-# client = OpenAI(api_key=DEEPSEEK_API_KEY, base_url=DEEPSEEK_API_BASE)
-
-# mcp = FastMCP("deepseek-v3-interface-demo")
-
 
 async def get_mcp_response(query: str) -> str:
     """
@@ -82,27 +72,6 @@ async def get_mcp_response(query: str) -> str:
     except Exception as e:
         return f"Error: An unexpected error occurred - {str(e)}"
 
-
-async def MCP_test():
-    query = "go to wen chang ge"
-    print(f"我的query是：{query}")
-
-    response = await get_mcp_response(query)
-    print(response)
-
-    # query = "请帮我调用say goodbye接口"
-    # print(f"我的query是：{query}")
-    #
-    # response = await get_deepseek_response(query)
-    # print(response)
-    #
-    # query = "请帮我调用say something接口"
-    # print(f"我的query是：{query}")
-    #
-    # response = await get_deepseek_response(query)
-    # print(response)
-
-
 async def get_suggestion(query: str) -> str:
     response = await get_mcp_response(query)  # 可以使用不同的接口
     return response
@@ -110,4 +79,3 @@ async def get_suggestion(query: str) -> str:
 
 if __name__ == "__main__":
     load_dotenv()
-    asyncio.run(MCP_test())

@@ -14,8 +14,6 @@ from mcp_server.mcp_server import get_suggestion
 from rag.rag import get_model_answer
 from tts.speech_to_text import webm_to_wav, convert_webm_bytes_to_wav_bytes, speech_to_text_baidu
 
-# from rag.rag import get_model_answer
-
 app = FastAPI()
 
 # 配置 CORS 中间件
@@ -144,9 +142,9 @@ async def get_asset(file_path: str):
 
 if __name__ == "__main__":
     # 检查vosk模型是否存在
-#    if not os.path.exists("model/vosk-model-cn-0.22"):
- #       print("请下载Vosk模型到model/vosk-model, 具体请见README")
-  #      exit(1)
+    # if not os.path.exists("model/vosk-model-cn-0.22"):
+    #    print("请下载Vosk模型到model/vosk-model, 具体请见README")
+    #    exit(1)
     load_dotenv()
     # uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
     uvicorn.run("main:app", host="0.0.0.0", port=8000,

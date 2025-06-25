@@ -26,6 +26,7 @@ async def get_mcp_response(query: str) -> str:
                               "description": position["mcp_description"]}}
             )
         # API调用
+        # client = OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"), base_url="https://api.deepseek.com")
         # response = client.chat.completions.create(
         #     model="deepseek-chat",#chat对应V3，reasoner对应R1
         #     messages=[{"role": "user", "content": query}],
@@ -38,7 +39,7 @@ async def get_mcp_response(query: str) -> str:
         # OPENAI
         # client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         # response = client.chat.completions.create(
-        #     model="gpt-4o-mini",  # chat对应V3，reasoner对应R1
+        #     model="gpt-4o-mini",
         #     messages=[{"role": "user", "content": query}],
         #     tools=tools,
         #     tool_choice="auto",
@@ -75,7 +76,6 @@ async def get_mcp_response(query: str) -> str:
 async def get_suggestion(query: str) -> str:
     response = await get_mcp_response(query)  # 可以使用不同的接口
     return response
-
 
 if __name__ == "__main__":
     load_dotenv()

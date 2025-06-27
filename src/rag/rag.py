@@ -63,7 +63,7 @@ def get_retrieved_context(query: str, db) -> str:
     return "\n".join([doc.page_content for doc in retrieved_docs])
 
 # 构造提示信息
-def prepare_prompt_template(question: str, context: str, location: str) -> List[Dict[str, str]]:
+def prepare_prompt_template(question: str, context: str) -> List[Dict[str, str]]:
     system_instruction_template = """
     请你作为一名专业的{location}导游，带领用户游览相应的地点。你的回复文字不要分点，用连贯、清晰的段落进行描述。
 
@@ -108,7 +108,7 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     # 检索上下文并获取回答
     context = get_retrieved_context(question, vector_db)
     print("上下文加载完成:", context)
-    prompt = prepare_prompt_template(question, '')
+    prompt = prepare_prompt_template(question, context)
     print("Prompt加载完成")
 
     # Qwen

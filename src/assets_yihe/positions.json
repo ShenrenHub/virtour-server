@@ -1,0 +1,44 @@
+[
+  {
+    "id": "shoupiaochu",
+    "name": "售票处",
+    "img": "assets/panorama/售票处.jpg",
+    "recommend_picture": "assets/preview/售票处.jpg",
+    "mcp_description": "游客要求介绍或者前往地点：售票处"
+  },
+  {
+    "id": "huazhongyou",
+    "name": "画中游",
+    "img": "assets/panorama/画中游.jpg",
+    "recommend_picture": "assets/preview/画中游.jpg",
+    "mcp_description": "游客要求介绍或者前往地点：画中游"
+  },
+  {
+    "id": "changlang",
+    "name": "长廊",
+    "img": "assets/panorama/长廊.jpg",
+    "recommend_picture": "assets/preview/长廊.jpg",
+    "mcp_description": "游客要求介绍或者前往地点：长廊"
+  },
+  {
+    "id": "wenchangge",
+    "name": "文昌阁",
+    "img": "assets/panorama/文昌阁.jpg",
+    "recommend_picture": "assets/preview/文昌阁.jpg",
+    "mcp_description": "游客要求介绍或者前往地点：文昌阁"
+  },
+  {
+    "id": "kunminghu",
+    "name": "昆明湖",
+    "img": "assets/panorama/昆明湖.jpg",
+    "recommend_picture": "assets/preview/昆明湖.jpg",
+    "mcp_description": "游客要求介绍或者前往地点：昆明湖"
+  },
+  {
+    "id": "tianti",
+    "name": "天梯",
+    "img": "assets/panorama/昆明湖.jpg",
+    "recommend_picture": "assets/preview/昆明湖.jpg",
+    "mcp_description": "游客要求介绍或者前往地点：天梯"
+  }
+]

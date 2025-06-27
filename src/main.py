@@ -11,9 +11,10 @@ from fastapi.responses import StreamingResponse
 from starlette.responses import FileResponse
 
 from mcp_server.mcp_server import get_suggestion
-from rag.rag_service import get_model_answer
-from rag.initializer import initialize_resources
-from tts.speech_to_text import webm_to_wav, convert_webm_bytes_to_wav_bytes, speech_to_text_baidu
+from rag.rag import get_model_answer
+from tts.tts_service import VoiceTimbre
+from tts.tts_utils import webm_to_wav, convert_webm_bytes_to_wav_bytes, speech_to_text_baidu
+from contextlib import asynccontextmanager
 
 app = FastAPI()
 
@@ -26,9 +27,6 @@ app.add_middleware(
     allow_headers=["*"],  # 允许所有的请求头
 )
 
-@app.on_event("startup")
-async def startup():
-    initialize_resources()
 
 @app.get("/ping")
 async def ping():
@@ -40,11 +38,16 @@ async def get_answer_stream(request: Request):
     data = await request.json()
     print(data)
     query = data.get("query")
+    voice_timbre = data.get("voice_timbre")
+    if voice_timbre not in VoiceTimbre.__members__:
+        return {"error": "Invalid voice_timbre value，not in [TEENAGER, ADULT, ELDERLY]"}
+    voice_timbre = VoiceTimbre[voice_timbre]
     if not query:
         return {"error": "Query is required"}
     # 使用 StreamingResponse 流式传输 NDJSON 格式数据
+    print("Query:", query, "Voice Timbre:", voice_timbre)
     return StreamingResponse(
-        get_model_answer(query),
+        get_model_answer(query, voice_timbre),
         media_type="application/x-ndjson"
     )
 
@@ -59,7 +62,7 @@ async def suggest(request: Request):
     print("返回:", {"suggestion": suggestion})
     return {"suggestion": suggestion}
 
-
+# 此API存在一个问题，voice的解析会重复一次，ask和suggest都会调用这个API
 @app.post("/voice_suggest")
 async def get_suggest_from_voice(request: Request):
     data = await request.json()
@@ -84,7 +87,10 @@ async def get_suggest_from_voice(request: Request):
 @app.post("/voice_ask")
 async def get_answer_stream_from_voice(request: Request):
     data = await request.json()
-    # print("data =", data)
+    voice_timbre = data.get("voice_timbre")
+    if voice_timbre not in VoiceTimbre.__members__:
+        return {"error": "Invalid voice_timbre value，not in [TEENAGER, ADULT, ELDERLY]"}
+    voice_timbre = VoiceTimbre[voice_timbre]
     # 1. 获取音频文件
     base64_file = data.get("recording")
     # 移除前缀（如果有的话）
@@ -93,42 +99,21 @@ async def get_answer_stream_from_voice(request: Request):
 
     # 解码 base64 数据
     webm_data = base64.b64decode(base64_file)
-    # 文件保存到本地
-    with open("recording2.webm", "wb") as f:
-        f.write(webm_data)
+
     # 转换为 WAV
     wav_data = convert_webm_bytes_to_wav_bytes(webm_data)
-    # wav保存到本地
-    # with open("recording.wav", "wb") as f:
-    #     f.write(wav_data)
-    # 2. 音频转换为文本
+
     text = speech_to_text_baidu(wav_data)
 
     query = text
     if not query:
         return {"message": "error"}
     # 使用 StreamingResponse 流式传输 NDJSON 格式数据
+    print("Query:", query, "Voice Timbre:", voice_timbre)
     return StreamingResponse(
-        get_model_answer(query),
+        get_model_answer(query, voice_timbre),
         media_type="application/x-ndjson"
     )
-
-
-@app.get("/google_map.js")
-def get_js():
-    load_dotenv()
-    api_key = os.getenv("GOOGLE_MAPS_API_KEY")
-    url = f"https://maps.googleapis.com/maps/api/js?key={api_key}&callback=map_initialize&v=weekly"
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            content = response.text
-        else:
-            content = 'console.error("Failed to load Google Maps API");'
-    except requests.RequestException:
-        content = 'console.error("Failed to load Google Maps API");'
-    return Response(content=content, media_type="application/javascript")
-
 
 @app.get("/assets/{file_path:path}")
 async def get_asset(file_path: str):
@@ -143,6 +128,8 @@ async def get_asset(file_path: str):
 
     # 返回文件响应
     return FileResponse(file_full_path)
+
+
 
 if __name__ == "__main__":
     # 检查vosk模型是否存在

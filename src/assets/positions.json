@@ -1,44 +1,33 @@
 [
-  {
-    "id": "shoupiaochu",
-    "name": "售票处",
-    "img": "assets/panorama/售票处.jpg",
-    "recommend_picture": "assets/preview/售票处.jpg",
-    "mcp_description": "游客要求介绍或者前往地点：售票处"
-  },
-  {
-    "id": "huazhongyou",
-    "name": "画中游",
-    "img": "assets/panorama/画中游.jpg",
-    "recommend_picture": "assets/preview/画中游.jpg",
-    "mcp_description": "游客要求介绍或者前往地点：画中游"
-  },
-  {
-    "id": "changlang",
-    "name": "长廊",
-    "img": "assets/panorama/长廊.jpg",
-    "recommend_picture": "assets/preview/长廊.jpg",
-    "mcp_description": "游客要求介绍或者前往地点：长廊"
-  },
-  {
-    "id": "wenchangge",
-    "name": "文昌阁",
-    "img": "assets/panorama/文昌阁.jpg",
-    "recommend_picture": "assets/preview/文昌阁.jpg",
-    "mcp_description": "游客要求介绍或者前往地点：文昌阁"
-  },
-  {
-    "id": "kunminghu",
-    "name": "昆明湖",
-    "img": "assets/panorama/昆明湖.jpg",
-    "recommend_picture": "assets/preview/昆明湖.jpg",
-    "mcp_description": "游客要求介绍或者前往地点：昆明湖"
-  },
-  {
-    "id": "tianti",
-    "name": "天梯",
-    "img": "assets/panorama/昆明湖.jpg",
-    "recommend_picture": "assets/preview/昆明湖.jpg",
-    "mcp_description": "游客要求介绍或者前往地点：天梯"
-  }
+    {
+        "id":"taihedian",
+        "name":"太和殿",
+        "img":"assets/panorama/太和殿.jpg",
+        "recommend_picture":"assets/preview/太和殿_preview.jpg",
+        "mcp_description":"游客要求介绍或前往地点 : 太和殿"
+    },{
+        "id": "qianqinggong",
+        "name": "乾清宫",
+        "img": "assets/panorama/乾清宫.jpg",
+        "recommend_picture": "assets/preview/乾清宫_preview.jpg",
+        "mcp_description": "游客要求介绍或前往地点 : 乾清宫"
+    },{
+        "id": "shenwumen",
+        "name": "神武门",
+        "img": "assets/panorama/神武门.jpg",
+        "recommend_picture": "assets/preview/神武门_preview.jpg",
+        "mcp_description": "游客要求介绍或前往地点 : 神武门"
+    },{
+        "id": "baohedian",
+        "name": "保和殿",
+        "img": "assets/panorama/保和殿.jpg",
+        "recommend_picture": "assets/preview/保和殿_preview.jpg",
+        "mcp_description": "游客要求介绍或前往地点 : 保和殿"
+    },{
+        "id": "yuhuayuan",
+        "name": "御花园",
+        "img": "assets/panorama/御花园.jpg",
+        "recommend_picture": "assets/preview/御花园_preview.jpg",
+        "mcp_description": "游客要求介绍或前往地点 : 御花园"
+    }
 ]

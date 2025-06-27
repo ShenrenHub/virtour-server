@@ -1,12 +1,10 @@
-import os
 import asyncio
 import edge_tts
 import requests
-from dotenv import load_dotenv
 from pydub import AudioSegment
 from io import BytesIO
 
-from tts.text_speech_synthesis import get_mp3_audio_download_link
+from tts.xunfei.text_speech_synthesis import get_mp3_audio_download_link
 
 
 async def generate_speech_xunfei(prompt_text):
@@ -23,13 +21,18 @@ async def generate_speech_xunfei(prompt_text):
     # todo ===============================
     return wav_data.getvalue()
 
+from enum import Enum
+class VoiceTimbre(Enum):
+    TEENAGER = "zh-CN-XiaoxiaoNeural"
+    ADULT = "zh-CN-YunjianNeural"
+    ELDERLY = "zh-CN-YunxiaNeural"
 
 # 基本功能测试：文本生成语音
-async def generate_speech_microsoft(prompt_text):
+async def generate_speech_microsoft(prompt_text, voice_timbre):
     # 去掉所有星号
     prompt_text = prompt_text.replace("*", "")
     # 创建 Communicate 对象
-    communicate = edge_tts.Communicate(text=prompt_text, voice="zh-CN-XiaoxiaoNeural")
+    communicate = edge_tts.Communicate(text=prompt_text, voice=voice_timbre.value)
     # 生成语音流
 
     # 收集音频数据

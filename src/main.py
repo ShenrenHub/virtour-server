@@ -1,21 +1,33 @@
 import base64
 import os
+from pathlib import Path
 
-import requests
 import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI
+from fastapi import Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import Response
 from fastapi.responses import StreamingResponse
 from starlette.responses import FileResponse
 
 from mcp_server.mcp_server import get_suggestion
-from rag.rag import get_model_answer
+from rag.rag_utils import build_knowledge_base
 from tts.tts_service import VoiceTimbre
-from tts.tts_utils import webm_to_wav, convert_webm_bytes_to_wav_bytes, speech_to_text_baidu
+from tts.tts_utils import convert_webm_bytes_to_wav_bytes, speech_to_text_baidu
 from contextlib import asynccontextmanager
 
+current_file_path = Path(__file__).parent.resolve()
+faiss_index_path = current_file_path / "rag" / "faiss_index"
+raw_text_path = current_file_path / "rag" / "base.txt"
+import os
+if not os.path.exists(faiss_index_path):
+    print("正在构建知识库...")
+    build_knowledge_base(str(raw_text_path), str(faiss_index_path))
+    print("知识库构建完成")
+else:
+    print("知识库已存在，跳过构建")
+
+from rag.rag_service import get_model_answer
 app = FastAPI()
 
 # 配置 CORS 中间件
@@ -26,7 +38,6 @@ app.add_middleware(
     allow_methods=["*"],  # 允许所有的 HTTP 方法
     allow_headers=["*"],  # 允许所有的请求头
 )
-
 
 @app.get("/ping")
 async def ping():

@@ -12,6 +12,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from transformers import AutoTokenizer, AutoModel
 from tts.tts_service import generate_speech_xunfei, VoiceTimbre
 from tts.tts_service import generate_speech_microsoft
+from langchain_huggingface import HuggingFaceEmbeddings
 
 # 构造提示信息
 def prepare_prompt_template(question: str, context: str, location: str) -> List[Dict[str, str]]:
@@ -48,13 +49,18 @@ def prepare_prompt_template(question: str, context: str, location: str) -> List[
     print("Prompt加载完成", result)
     return result
 
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+faiss_index_path = Path(__file__).parent.parent / "rag" / "faiss_index"
+db = FAISS.load_local(str(faiss_index_path), embeddings, allow_dangerous_deserialization=True)
+
 def get_model_answer(query: str,voice_timbre: VoiceTimbre) -> AsyncGenerator[str, Any]:
     print("开始向大模型发送问题")
     # 知识库文本路径
     question = query
-
+    docs = db.similarity_search(query, k=3)
+    context = "\n".join([doc.page_content for doc in docs])
     # 检索上下文并获取回答
-    prompt = prepare_prompt_template(question=question, context="", location="颐和园")
+    prompt = prepare_prompt_template(question=question, context=context, location="颐和园")
     print("Prompt加载完成")
 
     # Qwen

@@ -39,12 +39,6 @@ def load_knowledge_base(file_path: str) -> List[str]:
     with open(file_path, "r", encoding="utf-8") as f:
         return [line.strip() for line in f.readlines() if line.strip()]
 
-# # 创建向量数据库
-# def create_vector_db(texts: List[str], embedder: Embeddings):
-#     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
-#     all_splits = text_splitter.create_documents(texts)
-#     return FAISS.from_documents(all_splits, embedding=embedder)
-
 def load_db(texts: List[str], embedder: Embeddings, index_path: str = "./vector_store") -> FAISS:
     if os.path.exists(index_path):
         print("正在从本地加载向量数据库...")
@@ -94,7 +88,6 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     print("开始向大模型发送问题")
     # 知识库文本路径
     knowledge_file = "./base.txt"
-    question = query
 
     # 加载知识库并创建向量数据库
     knowledge_texts = load_knowledge_base(knowledge_file)
@@ -106,9 +99,9 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     print("知识库加载完成")
 
     # 检索上下文并获取回答
-    context = get_retrieved_context(question, vector_db)
+    context = get_retrieved_context(query, vector_db)
     print("上下文加载完成:", context)
-    prompt = prepare_prompt_template(question, context)
+    prompt = prepare_prompt_template(query, context)
     print("Prompt加载完成")
 
     # Qwen

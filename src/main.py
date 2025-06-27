@@ -11,7 +11,8 @@ from fastapi.responses import StreamingResponse
 from starlette.responses import FileResponse
 
 from mcp_server.mcp_server import get_suggestion
-from rag.rag import get_model_answer
+from rag.rag_service import get_model_answer
+from rag.initializer import initialize_resources
 from tts.speech_to_text import webm_to_wav, convert_webm_bytes_to_wav_bytes, speech_to_text_baidu
 
 app = FastAPI()
@@ -25,6 +26,9 @@ app.add_middleware(
     allow_headers=["*"],  # 允许所有的请求头
 )
 
+@app.on_event("startup")
+async def startup():
+    initialize_resources()
 
 @app.get("/ping")
 async def ping():

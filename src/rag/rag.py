@@ -75,20 +75,20 @@ def prepare_prompt_template(question: str, context: str, location: str) -> List[
     “对不起，但是您的问题好像和本景点无关，也有可能是我没听清，您能重复一遍吗？”
     """
     with open("../assets/positions.json", "r", encoding="utf-8") as file:
-    data = json.load(file)
-    spots = [item["name"] for item in data]
-    suggested_spots = "、".join(spots)
-    location = "颐和园"
-    system_instruction = system_instruction_template.format(
-        location=location,
-        suggested_spots=suggested_spots
-    )
+        data = json.load(file)
+        spots = [item["name"] for item in data]
+        suggested_spots = "、".join(spots)
+        location = "颐和园"
+        system_instruction = system_instruction_template.format(
+            location=location,
+            suggested_spots=suggested_spots
+        )
 
-    return [
-        {"role": "system", "content": system_instruction.strip()},
-        {"role": "system", "content": f"上下文: {context}"},
-        {"role": "user", "content": question},
-    ]
+        return [
+            {"role": "system", "content": system_instruction.strip()},
+            {"role": "system", "content": f"上下文: {context}"},
+            {"role": "user", "content": question},
+        ]
 
 def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     print("开始向大模型发送问题")
@@ -101,14 +101,14 @@ def get_model_answer(query: str) -> AsyncGenerator[str, Any]:
     embedder = LocalEmbeddings(model_name="BAAI/bge-large-en-v1.5")
     index_path = "./vector_store"
     # vector_db = create_vector_db(knowledge_texts, embedder)
-    vector_db = load_db(knowlege_texts, embedder, index_path)
+    vector_db = load_db(knowledge_texts, embedder, index_path)
 
     print("知识库加载完成")
 
     # 检索上下文并获取回答
     context = get_retrieved_context(question, vector_db)
     print("上下文加载完成:", context)
-    prompt = prepare_prompt(question, '')
+    prompt = prepare_prompt_template(question, '')
     print("Prompt加载完成")
 
     # Qwen

@@ -33,6 +33,7 @@ pip -m venv .venv
 venv\Scripts\activate
 pip install -r requirements.txt
 ```
+Windows下会出现安装FaissGPU报错，可以适当更换其他包。
 
 ---
 
@@ -70,9 +71,8 @@ OPENAI_API_KEY=sk-xxxxxxx
 ```shell
 wget https://alphacephei.com/vosk/models/vosk-model-cn-0.22.zip
 unzip vosk-model-cn-0.22.zip
+```
 
-
-```shell
 
 ## 🗂项目结构
 

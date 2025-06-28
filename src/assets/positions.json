@@ -4,7 +4,15 @@
         "name":"太和殿",
         "img":"assets/panorama/太和殿.jpg",
         "recommend_picture":"assets/preview/太和殿_preview.jpg",
-        "mcp_description":"游客要求介绍或前往地点 : 太和殿"
+        "mcp_description":"游客要求介绍或前往地点 : 太和殿",
+        "extra": [
+            {
+                "extra_id":"taihedian_winter",
+                "extra_name": "冬季",
+                "extra_img": "assets/extra/panorama/太和殿_冬季.jpg",
+                "extra_recommend_picture": "assets/extra/preview/太和殿_冬季_preview.jpg"
+            }
+        ]
     },{
         "id": "qianqinggong",
         "name": "乾清宫",
